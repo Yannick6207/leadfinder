@@ -1,0 +1,18 @@
+{% extends "base.html" %}{% block title %}Dashboard · YN Lead Finder{% endblock %}
+{% block content %}
+<div class="title-row"><div><h1>Dashboard</h1><p>De sterkste Gelderse kansen en je volgende verkoopacties.</p></div><a class="button primary" href="{{ url_for('main.finder') }}">Zoek nieuwe leads</a></div>
+<section class="kpi-strip" aria-label="Kerncijfers">
+  <div><span>Totaal leads</span><strong>{{ stats.total }}</strong><small>in de database</small></div><div><span>Nieuwe leads</span><strong>{{ stats.new }}</strong><small>wachten op actie</small></div><div><span>Zonder website</span><strong>{{ stats.no_site }}</strong><small>directe kansen</small></div><div><span>Slechte website</span><strong>{{ stats.bad_site }}</strong><small>demo-kandidaten</small></div><div><span>Gem. leadscore</span><strong>{{ stats.avg_score }}</strong><small>van 100</small></div>
+</section>
+<div class="dashboard-grid">
+  <div class="main-column">
+    <section class="panel"><div class="section-head"><div><h2>Salespipeline</h2><p>Waar de huidige leads zich bevinden.</p></div><a href="{{ url_for('main.pipeline') }}">Open pipeline</a></div><div class="bar-chart" data-chart='{{ chart_data.status|tojson }}'></div></section>
+    <section class="panel"><div class="section-head"><div><h2>Leads per branche</h2><p>De categorieën met de meeste prospects.</p></div></div><div class="bar-chart compact" data-chart='{{ chart_data.category|tojson }}'></div></section>
+  </div>
+  <aside class="right-rail">
+    <section><div class="section-head"><div><h2>Volgende stap</h2><p>De hoogste scores eerst.</p></div></div><div class="rank-list">{% for lead in top_leads %}<a href="{{ url_for('main.lead_detail', lead_id=lead.id) }}"><span><strong>{{ lead.company_name }}</strong><small>{{ lead.category }} · {{ lead.city }}</small></span><b class="score">{{ lead.lead_score }}</b></a>{% endfor %}</div><a class="button secondary full" href="{{ url_for('main.leads') }}">Bekijk alle leads</a></section>
+    <section class="mini-stats"><h2>Voortgang</h2><dl><div><dt>Gebeld</dt><dd>{{ stats.called }}</dd></div><div><dt>Afspraken</dt><dd>{{ stats.appointments }}</dd></div><div><dt>Offertes</dt><dd>{{ stats.quotes }}</dd></div><div><dt>Klanten</dt><dd>{{ stats.clients }}</dd></div></dl></section>
+  </aside>
+</div>
+{% endblock %}
+{% block scripts %}<script>window.renderCharts?.()</script>{% endblock %}
